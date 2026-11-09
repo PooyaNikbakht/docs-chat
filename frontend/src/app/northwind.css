@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* Northwind Coffee Co. has its own brand, separate from the demo chrome. */
+:root {
+  --nw-cream: #f6f0e4;
+  --nw-paper: #fbf8f2;
+  --nw-oat: #ece2cf;
+  --nw-espresso: #3b2a20;
+  --nw-roast: #6b4a36;
+  --nw-green: #4f6b4a;
+  --nw-sage: #dfe6d6;
+  --nw-line: #dccfb8;
+  --nw-crema: #c98b4e;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-cream: var(--nw-cream);
+  --color-paper: var(--nw-paper);
+  --color-oat: var(--nw-oat);
+  --color-espresso: var(--nw-espresso);
+  --color-roast: var(--nw-roast);
+  --color-green: var(--nw-green);
+  --color-sage: var(--nw-sage);
+  --color-line: var(--nw-line);
+  --color-crema: var(--nw-crema);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+}
+
+html,
+body {
+  background: var(--nw-cream);
+  color: var(--nw-espresso);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--nw-green);
+  outline-offset: 3px;
+  border-radius: 4px;
+}

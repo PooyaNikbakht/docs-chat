@@ -1,0 +1,279 @@
+{
+  "business": {
+    "name": "Northwind Coffee Co.",
+    "short_name": "Northwind",
+    "tagline": "Small-batch coffee, roasted by the harbour.",
+    "city": "Halifax, Nova Scotia",
+    "founded": "2014",
+    "founders": "Maya Okafor and Liam Doucette",
+    "roaster": "a 15 kg cast-iron drum roaster we call Old Tom",
+    "email": "hello@northwind.example",
+    "wholesale_email": "wholesale@northwind.example",
+    "phone": "(902) 555-0142",
+    "support_hours": "Monday to Friday, 9 am to 5 pm Atlantic time",
+    "reply_time": "within one business day",
+    "currency": "CAD",
+    "bag_size": "340 g",
+    "website": "northwind.example"
+  },
+  "shipping": {
+    "order_cutoff": "12 pm Atlantic time",
+    "roast_days": "Monday to Thursday",
+    "free_canada_over": 45,
+    "free_us_over": 75,
+    "countries": "Canada and the United States",
+    "no_ship_note": "We don't ship outside Canada and the United States yet, so we can't send orders to the UK, Europe, Australia or Mexico.",
+    "tracking": "A tracking link is emailed as soon as your order ships.",
+    "address_change_window": "2 hours",
+    "rates": [
+      {
+        "zone": "Canada",
+        "method": "Standard",
+        "price": 8,
+        "time": "2 to 5 business days"
+      },
+      {
+        "zone": "Canada",
+        "method": "Express",
+        "price": 16,
+        "time": "1 to 2 business days"
+      },
+      {
+        "zone": "United States",
+        "method": "Standard",
+        "price": 14,
+        "time": "4 to 8 business days"
+      },
+      {
+        "zone": "Local pickup",
+        "method": "Harbour Street café",
+        "price": 0,
+        "time": "Ready the next business day"
+      }
+    ]
+  },
+  "returns": {
+    "window_days": "30",
+    "guarantee": "If a coffee isn't for you, tell us within 30 days of delivery and we'll send a different coffee or refund it, even if the bag is open. This works once per order.",
+    "gear": "Brewing gear can be returned unused, in its original box, within 30 days of delivery.",
+    "damaged": "If something arrives damaged or wrong, email a photo within 7 days and we'll replace it at no cost.",
+    "refund_time": "Refunds go back to the original payment method within 5 to 7 business days of approval.",
+    "return_shipping": "We email a prepaid return label for gear returns in Canada. US customers pay return shipping.",
+    "final_sale": "Gift cards and opened brewing gear are final sale."
+  },
+  "subscriptions": {
+    "discount_percent": 10,
+    "frequencies": "every 1, 2, 3 or 4 weeks",
+    "free_shipping": "Subscriptions ship free anywhere in Canada. US subscriptions ship free over $75.",
+    "change_deadline": "2 days before your next ship date",
+    "pause_max": "3 months",
+    "skip": "Skip any single delivery from your account, up to the change deadline.",
+    "cancel": "Cancel any time from your account. There are no fees and no minimum number of deliveries.",
+    "roasters_choice": "Roaster's Choice sends a different single origin each delivery, picked by our roasting team.",
+    "manage": "Manage everything at northwind.example/account, or reply to any shipping email and we'll do it for you."
+  },
+  "coffees": [
+    {
+      "id": "harbour-blend",
+      "name": "Harbour Blend",
+      "origin": "Brazil and Colombia",
+      "region": "Cerrado and Huila",
+      "process": "Natural and washed",
+      "roast": "Medium",
+      "color": "#8A5A3C",
+      "price": 19,
+      "notes": [
+        "milk chocolate",
+        "toasted almond",
+        "brown sugar"
+      ],
+      "use": [
+        "drip",
+        "French press",
+        "cold brew"
+      ]
+    },
+    {
+      "id": "first-light",
+      "name": "First Light",
+      "origin": "Ethiopia",
+      "region": "Yirgacheffe",
+      "process": "Washed",
+      "roast": "Light",
+      "color": "#C98B4E",
+      "price": 22,
+      "notes": [
+        "bergamot",
+        "peach",
+        "jasmine"
+      ],
+      "use": [
+        "pour-over",
+        "filter"
+      ]
+    },
+    {
+      "id": "night-shift",
+      "name": "Night Shift Espresso",
+      "origin": "Brazil and Guatemala",
+      "region": "Mogiana and Huehuetenango",
+      "process": "Natural and washed",
+      "roast": "Medium-dark",
+      "color": "#3B2A20",
+      "price": 20,
+      "notes": [
+        "cocoa",
+        "molasses",
+        "dark cherry"
+      ],
+      "use": [
+        "espresso",
+        "moka pot",
+        "milk drinks"
+      ]
+    },
+    {
+      "id": "huila-valley",
+      "name": "Huila Valley",
+      "origin": "Colombia",
+      "region": "Huila",
+      "process": "Washed",
+      "roast": "Medium",
+      "color": "#5E7A5A",
+      "price": 21,
+      "notes": [
+        "red apple",
+        "caramel",
+        "orange zest"
+      ],
+      "use": [
+        "pour-over",
+        "drip",
+        "AeroPress"
+      ]
+    },
+    {
+      "id": "kirinyaga",
+      "name": "Kirinyaga Peaberry",
+      "origin": "Kenya",
+      "region": "Kirinyaga",
+      "process": "Washed",
+      "roast": "Light",
+      "color": "#9C4A3A",
+      "price": 24,
+      "notes": [
+        "blackcurrant",
+        "grapefruit",
+        "cane sugar"
+      ],
+      "use": [
+        "pour-over",
+        "filter"
+      ]
+    },
+    {
+      "id": "still-water",
+      "name": "Still Water Decaf",
+      "origin": "Colombia",
+      "region": "Tolima",
+      "process": "Sugarcane decaf",
+      "roast": "Medium",
+      "color": "#6B7F8E",
+      "price": 20,
+      "notes": [
+        "chocolate",
+        "plum",
+        "honey"
+      ],
+      "use": [
+        "any brew method"
+      ]
+    }
+  ],
+  "coffee_notes": {
+    "decaf_process": "Still Water Decaf is decaffeinated in Colombia with the sugarcane process, which uses ethyl acetate made from fermented sugarcane and water. It removes about 97 percent of the caffeine.",
+    "roast_levels": "We roast light, medium and medium-dark. Light roasts taste brighter and more fruity, medium roasts are balanced and sweet, and medium-dark roasts are rich and low in acidity.",
+    "freshness": "Every bag is roasted to order and shows its roast date. Coffee tastes best from 5 to 30 days after roasting.",
+    "grind": "Every coffee is available as whole bean, or ground for espresso, pour-over, drip or French press.",
+    "allergens": "Our roastery handles only coffee beans. We don't roast flavoured coffees, and no nuts, dairy, gluten or soy are used in the roastery. Pastries in our cafés may contain nuts, milk, eggs or wheat.",
+    "sourcing": "We buy green coffee from importers who pay producers above the Fairtrade minimum, and we publish the price we pay for each coffee."
+  },
+  "brewing": [
+    {
+      "method": "Pour-over",
+      "ratio": "1:16",
+      "dose": "22 g",
+      "yield": "350 g of water",
+      "grind": "medium-fine",
+      "temperature": "93 to 96 °C",
+      "time": "3 to 3.5 minutes"
+    },
+    {
+      "method": "French press",
+      "ratio": "1:15",
+      "dose": "30 g",
+      "yield": "450 g of water",
+      "grind": "coarse",
+      "temperature": "94 °C",
+      "time": "4 minutes"
+    },
+    {
+      "method": "Espresso",
+      "ratio": "1:2",
+      "dose": "18 g",
+      "yield": "36 g of espresso",
+      "grind": "fine",
+      "temperature": "92 to 94 °C",
+      "time": "27 to 32 seconds"
+    }
+  ],
+  "gift_cards": {
+    "amounts": [
+      25,
+      50,
+      100
+    ],
+    "delivery": "Digital gift cards are emailed right away, or on a date you choose.",
+    "expiry": "Gift cards never expire.",
+    "use": "Gift cards work on one-time orders, subscriptions and in our cafés.",
+    "refunds": "Gift cards can't be exchanged for cash."
+  },
+  "wholesale": {
+    "who": "coffee shops, restaurants and offices",
+    "minimum": "5 kg per order",
+    "delivery": "Free delivery in the Halifax area every Tuesday and Friday. Elsewhere we ship by courier.",
+    "training": "New coffee shop partners get two free barista training sessions and help dialling in their grinder.",
+    "contact": "Email wholesale@northwind.example with your business name and expected weekly volume. We reply within 2 business days."
+  },
+  "cafes": [
+    {
+      "name": "Harbour Street",
+      "address": "112 Harbour Street, Halifax",
+      "weekdays": "7 am to 6 pm",
+      "saturday": "8 am to 5 pm",
+      "sunday": "8 am to 5 pm",
+      "note": "Our first café, and the pickup point for online orders."
+    },
+    {
+      "name": "Roastery",
+      "address": "40 Foundry Lane, Dartmouth",
+      "weekdays": "8 am to 4 pm",
+      "saturday": "9 am to 3 pm",
+      "sunday": "closed",
+      "note": "Free roastery tours run on Saturdays at 10 am."
+    },
+    {
+      "name": "Willow Row",
+      "address": "18 Willow Row, Halifax",
+      "weekdays": "7:30 am to 5 pm",
+      "saturday": "8 am to 4 pm",
+      "sunday": "8 am to 4 pm",
+      "note": "A quiet back room for reading and studying."
+    }
+  ],
+  "cafe_notes": {
+    "holidays": "All cafés close on December 25 and January 1. Holiday hours are posted on our website a week ahead.",
+    "wifi": "Free Wi-Fi in every café.",
+    "pets": "Dogs are welcome on the Harbour Street patio."
+  }
+}

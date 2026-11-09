@@ -1,0 +1,46 @@
+[project]
+name = "docs-chat-backend"
+version = "0.2.0"
+description = "Website support bot that answers from your documents, with citations. FastAPI backend."
+readme = "../README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "anthropic",
+    "fastapi",
+    "httpx>=0.28.1",
+    "jiter",
+    "openai",
+    "pydantic",
+    "pydantic-settings",
+    "pypdf",
+    "python-multipart",
+    "tzdata>=2026.6",
+    "uvicorn[standard]",
+]
+
+[dependency-groups]
+dev = [
+    "fpdf2",
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF", "ANN"]
+ignore = ["ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]

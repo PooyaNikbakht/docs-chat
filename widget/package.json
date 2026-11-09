@@ -1,0 +1,24 @@
+{
+  "name": "docs-chat-widget",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Embeddable support chat widget. One script tag, rendered in a Shadow DOM.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs && node scripts/size.mjs",
+    "watch": "node build.mjs --watch",
+    "size": "node scripts/size.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "happy-dom": "^21.0.4",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

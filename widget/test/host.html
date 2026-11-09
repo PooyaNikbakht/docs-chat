@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  Isolation check: a bare page with aggressive global CSS. The widget should look exactly
+  as it does on a clean page, and the page should look the same with or without it.
+
+  Run: make widget-host  (or serve this folder and open /test/host.html with the API on 8010)
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hostile CSS host page</title>
+    <style>
+      html { font-size: 40px !important; }
+      * {
+        font-family: "Comic Sans MS", "Papyrus", cursive !important;
+        color: #d00 !important;
+        line-height: 3 !important;
+        letter-spacing: 3px !important;
+        text-transform: uppercase !important;
+        text-align: center !important;
+        box-sizing: content-box !important;
+        cursor: crosshair !important;
+      }
+      *:not(html):not(body) {
+        margin: 12px !important;
+        padding: 12px !important;
+        border: 4px dashed magenta !important;
+        background: yellow !important;
+        border-radius: 0 !important;
+        transition: all 3s !important;
+        animation: none !important;
+      }
+      div, span, p, button, textarea, a, ul, li, h2 {
+        display: block !important;
+        width: 300px !important;
+        min-height: 80px !important;
+        float: left !important;
+        position: relative !important;
+        z-index: 1 !important;
+        opacity: 0.9 !important;
+        filter: hue-rotate(90deg) !important;
+      }
+      svg, svg * { width: 120px !important; height: 120px !important; fill: lime !important; stroke: blue !important; }
+      button { width: 400px !important; height: 120px !important; font-size: 30px !important; }
+      textarea { resize: both !important; font-size: 40px !important; }
+      mark { background: black !important; color: white !important; }
+      [hidden] { display: block !important; }
+      docs-chat-widget { display: none !important; }
+      body { position: relative; overflow-x: hidden; background: #e8e8ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Hostile host page</h1>
+      <p id="probe">This page styles every element it can reach. The chat bubble in the corner should still look normal.</p>
+      <button type="button">A page button</button>
+    </main>
+    <script>
+      // Point the widget at a different API with ?api=...
+      const api = new URLSearchParams(location.search).get("api") || "http://localhost:8010";
+      const s = document.createElement("script");
+      s.src = "../dist/widget.js";
+      s.dataset.bot = "northwind";
+      s.dataset.api = api;
+      s.defer = true;
+      document.body.appendChild(s);
+    </script>
+  </body>
+</html>

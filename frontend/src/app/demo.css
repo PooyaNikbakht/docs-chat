@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* Demo chrome (/try and /install) uses Pooya's brand from STANDARDS.md. */
+:root {
+  --background: #ffffff;
+  --surface: #f6f7f9;
+  --ink: #111827;
+  --muted: #5b6472;
+  --border: #e3e6ea;
+  --accent: #0f766e;
+  --accent-soft: #e6f2f1;
+  --amber: #b45309;
+  --danger: #b42318;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0f14;
+    --surface: #121821;
+    --ink: #e6e8eb;
+    --muted: #9aa3af;
+    --border: #232b36;
+    --accent: #2dd4bf;
+    --accent-soft: #0f2a2a;
+    --amber: #fbbf24;
+    --danger: #f97066;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-amber: var(--amber);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
