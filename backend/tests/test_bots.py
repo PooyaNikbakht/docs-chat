@@ -294,3 +294,13 @@ def test_weak_match_after_the_daily_cap_is_not_found_not_a_guess():
         _, events = ask_bot(client, WEAK, session="cap-2")
     assert live.calls == 1
     assert answer_text(events) == NORTHWIND.not_found
+
+
+def test_every_persona_forbids_mentioning_the_passages():
+    # A live answer once ended "…are not listed for the US in the provided passages".
+    from app.bots import BOTS
+    from app.providers.base import DOCUMENT_PERSONA
+
+    for persona in [DOCUMENT_PERSONA, *(bot.persona for bot in BOTS.values())]:
+        assert "Never mention passages" in persona.system_prompt
+        assert "say plainly that you don't have details on the rest" in persona.system_prompt
