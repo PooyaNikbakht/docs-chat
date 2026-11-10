@@ -5,8 +5,8 @@ export const site = {
   productName: "Website support bot",
   author: "Pooya Nikbakht",
   githubUrl: "https://github.com/PooyaNikbakht",
-  /** Empty while the repo is private: the code links are hidden. */
-  repoUrl: "" as string,
+  /** Empty hides the code links. */
+  repoUrl: "https://github.com/PooyaNikbakht/docs-chat" as string,
   portfolioUrl: "https://pooya.website",
   /** Where the footer line "Fictional business. Demo by ..." links to. */
   creditUrl: process.env.NEXT_PUBLIC_CREDIT_URL ?? "https://pooya.website",
