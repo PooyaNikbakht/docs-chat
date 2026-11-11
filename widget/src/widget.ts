@@ -509,6 +509,12 @@ export class Widget {
           contact: event.contact,
           price: event.price,
           reference: event.reference,
+          // Only ever a Stripe Checkout link (the server checks too).
+          paymentUrl:
+            typeof event.payment_url === "string" && event.payment_url.startsWith("https://checkout.stripe.com/")
+              ? event.payment_url
+              : null,
+          deposit: event.deposit,
         };
         break;
       case "done":
@@ -776,6 +782,7 @@ export class Widget {
 
   private renderBooking(b: BookingSummary, active: boolean): HTMLElement {
     const pending = b.status === "pending";
+    const held = b.status === "awaiting_payment";
     const rows: [string, string | null | undefined][] = [
       ["Service", b.price ? `${b.service}, ${b.price}` : b.service],
       ["When", b.when],
@@ -801,16 +808,30 @@ export class Widget {
       {
         class: `booking ${b.status}`,
         role: "group",
-        "aria-label": pending ? "Booking to confirm" : "Booking confirmed",
+        "aria-label": pending ? "Booking to confirm" : held ? "Booking held until the deposit is paid" : "Booking confirmed",
       },
       h(
         "p",
         { class: "booking-head" },
-        pending ? null : icon(icons.check),
-        pending ? (active ? "Check the details" : "Booking details") : "Booked",
+        pending || held ? null : icon(icons.check),
+        pending ? (active ? "Check the details" : "Booking details") : held ? "Held for 30 minutes" : "Booked",
       ),
       list,
     );
+    if (held && b.paymentUrl) {
+      card.append(
+        h(
+          "div",
+          { class: "booking-actions" },
+          h(
+            "a",
+            { class: "confirm", href: b.paymentUrl, target: "_blank", rel: "noopener noreferrer" },
+            b.deposit ? `Pay ${b.deposit} deposit` : "Pay deposit",
+          ),
+        ),
+        h("p", { class: "booking-note" }, "Opens Stripe's secure page in a new tab. Paying confirms the booking."),
+      );
+    }
     if (pending && active) {
       card.append(
         h(
@@ -873,7 +894,9 @@ function bookingSentence(b: BookingSummary): string {
   const who = b.staff ? ` with ${b.staff}` : "";
   return b.status === "pending"
     ? `Please confirm: ${b.service}, ${b.when}${who}, for ${b.name}. Use the Book it button to confirm.`
-    : `Booked: ${b.service}, ${b.when}${who}.${b.reference ? ` Reference ${b.reference}.` : ""}`;
+    : b.status === "awaiting_payment"
+      ? `Held for 30 minutes: ${b.service}, ${b.when}${who}. Pay the ${b.deposit ?? ""} deposit to confirm it.`.replace("the  deposit", "the deposit")
+      : `Booked: ${b.service}, ${b.when}${who}.${b.reference ? ` Reference ${b.reference}.` : ""}`;
 }
 
 function typing(): HTMLElement {

@@ -252,4 +252,41 @@ describe("widget", () => {
     expect($(".booking.confirmed").textContent).toContain("KC-1A2B3C");
     expect($(".sr-only[aria-live='polite']").textContent).toContain("Booked: Skin fade, Sat, Nov 14, 2:00 PM with Marcus.");
   });
+
+  it("shows a held booking with a pay deposit link, only to Stripe Checkout", async () => {
+    const held = (url: string): StreamEvent[] => [
+      { type: "meta", provider: "mock", notice: null },
+      { type: "text", text: "Almost done, Alex." },
+      {
+        type: "booking",
+        status: "awaiting_payment",
+        service: "Skin fade",
+        when: "Sat, Nov 14, 2:00 PM",
+        staff: "Marcus",
+        name: "Alex Chen",
+        contact: "alex@example.com",
+        price: "$45",
+        reference: "bk_1",
+        payment_url: url,
+        deposit: "$10",
+      },
+      { type: "done", provider: "mock", grounded: false, citations: 0, handoff: false },
+    ];
+    setup([held("https://checkout.stripe.com/c/pay/cs_test_1"), held("https://evil.example/pay")]);
+    await mount();
+    launcher().click();
+    await widget!.send("Book it");
+    await vi.waitFor(() => expect($$(".booking.awaiting_payment")).toHaveLength(1));
+    const pay = $<HTMLAnchorElement>(".booking a.confirm");
+    expect(pay.textContent).toBe("Pay $10 deposit");
+    expect(pay.href).toBe("https://checkout.stripe.com/c/pay/cs_test_1");
+    expect(pay.target).toBe("_blank");
+    expect(pay.rel).toContain("noopener");
+    expect($(".booking-head").textContent).toBe("Held for 30 minutes");
+    expect($(".sr-only[aria-live='polite']").textContent).toContain("Pay the $10 deposit to confirm it.");
+
+    await widget!.send("Book it");
+    await vi.waitFor(() => expect($$(".booking")).toHaveLength(2));
+    expect($$(".booking a.confirm")).toHaveLength(1); // the second card's link wasn't Stripe's
+  });
 });

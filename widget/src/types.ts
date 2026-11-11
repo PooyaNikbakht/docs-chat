@@ -28,7 +28,8 @@ export interface Choices {
 }
 
 export interface BookingSummary {
-  status: "pending" | "confirmed";
+  /** `awaiting_payment`: the time is held while the visitor pays the deposit at `paymentUrl`. */
+  status: "pending" | "confirmed" | "awaiting_payment";
   service: string;
   when: string;
   staff?: string | null;
@@ -36,6 +37,8 @@ export interface BookingSummary {
   contact: string;
   price?: string | null;
   reference?: string | null;
+  paymentUrl?: string | null;
+  deposit?: string | null;
 }
 
 /** A tap sent with the question: a choice chip, or a button on the booking card. */
@@ -49,7 +52,7 @@ export type StreamEvent =
   | { type: "text"; text: string }
   | ({ type: "citation" } & Citation)
   | ({ type: "choices" } & Choices)
-  | ({ type: "booking" } & BookingSummary)
+  | ({ type: "booking"; payment_url?: string | null } & Omit<BookingSummary, "paymentUrl">)
   | { type: "done"; provider: ProviderName; grounded: boolean; citations: number; handoff?: boolean }
   | { type: "error"; code: string; message: string };
 

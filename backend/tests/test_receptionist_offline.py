@@ -265,3 +265,30 @@ async def test_desk_refuses_to_confirm_in_the_same_message_or_unoffered_slots():
     with pytest.raises(DeskError) as exc:
         await desk.availability(KINGSWAY_SERVICES[3], date(2026, 11, 1))
     assert exc.value.code == "past_date"
+
+
+async def test_a_service_with_a_deposit_is_held_with_a_pay_button_not_booked():
+    from dataclasses import replace
+
+    chat = Chat()
+    real_book = chat.provider.book
+
+    async def book_with_deposit(slot, customer, notes=""):
+        booking = await real_book(slot, customer, notes)
+        return replace(
+            booking, payment_url="https://checkout.stripe.com/c/pay/cs_test_1", deposit_cents=1000
+        )
+
+    chat.provider.book = book_with_deposit  # type: ignore[method-assign]
+    reply = await chat.say("Is Saturday afternoon open for a skin fade?")
+    reply = await chat.tap("slot", one(reply, ChoicesEvent).options[0].id)
+    reply = await chat.say("Alex Chen, alex@example.com")
+    reply = await chat.tap("confirm")
+    held = one(reply, BookingEvent)
+    assert held.status == "awaiting_payment"
+    assert (
+        held.payment_url == "https://checkout.stripe.com/c/pay/cs_test_1" and held.deposit == "$10"
+    )
+    assert "held for you for 30 minutes" in text_of(reply)
+    assert "Pay the $10 deposit" in text_of(reply)
+    assert "You're booked" not in text_of(reply)

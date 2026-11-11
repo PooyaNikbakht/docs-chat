@@ -223,12 +223,24 @@ class ToolRun:
             return result
         self.booking = event
         self.time_labels.add(format_time(booking.slot.start))
-        return {
-            "status": "booked",
-            "reference": booking.reference,
-            "summary": f"{event.service}, {event.when}"
-            + (f", with {event.staff}" if event.staff else ""),
-        }
+        summary = f"{event.service}, {event.when}" + (
+            f", with {event.staff}" if event.staff else ""
+        )
+        if booking.payment_url:
+            # The time is held, not booked: the visitor pays the deposit with the card's button.
+            return {
+                "status": "held_for_deposit",
+                "reference": booking.reference,
+                "summary": summary,
+                "deposit": booking.deposit,
+                "next_step": (
+                    "The time is held for 30 minutes. Tell the visitor to pay the "
+                    f"{booking.deposit} deposit with the Pay deposit button on the booking card "
+                    "to confirm it. "
+                    "Don't write the link out; the button has it."
+                ),
+            }
+        return {"status": "booked", "reference": booking.reference, "summary": summary}
 
 
 def tool_result_block(tool_use_id: str, result: dict[str, Any], is_error: bool) -> dict[str, Any]:

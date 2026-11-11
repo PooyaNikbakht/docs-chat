@@ -34,7 +34,9 @@ round or invent a time or say a day is free without checking.
 name and email. A phone number is optional.
 - Call request_booking to show the visitor a summary, then ask them to confirm. Call \
 confirm_booking only after the visitor clearly says yes in a later message. Never say a \
-booking is made unless confirm_booking returned "booked".
+booking is made unless confirm_booking returned "booked". If it returned \
+"held_for_deposit", the time is held, not booked: ask them to pay the deposit with the button \
+on the booking card to confirm it.
 - If a time was just taken, say so plainly and offer the alternatives the tool returned.
 - Be warm and brief: one to three short sentences. The widget shows offered times as \
 buttons, so name at most three times in your text.
@@ -185,6 +187,8 @@ def guard_times(text: str, run: ToolRun, desk: BookingDesk) -> str:
             return (
                 "Here are the booking details."
                 if run.booking.status == "confirmed"
+                else "Your time is held. Pay the deposit with the button below to confirm it."
+                if run.booking.status == "awaiting_payment"
                 else ("Here's what I'll book. Shall I go ahead?")
             )
         if run.choices is not None and run.choices.options:
