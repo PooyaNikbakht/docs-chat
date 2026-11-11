@@ -98,7 +98,8 @@ The stream sends `meta {provider, notice}`, then `text` deltas and `citation {pa
 3. **Claude with tools.** With a key, Claude runs a short manual tool loop with four strict tools: `list_services`, `check_availability(service, date, time_of_day)`, `request_booking(slot_id, name, email, phone)` and `confirm_booking()`. Inputs are validated with pydantic before anything reaches the booking system, and errors go back as `is_error` tool results. The desk's state (today's date, offered times, the pending booking) is restated in every request. The reply is checked against the times the tools returned: a reply that names any other time is replaced with a safe sentence, so a made-up time never reaches the visitor.
 4. **Offline receptionist.** With no key, a deterministic version parses the day ("tomorrow", "Saturday", "Nov 20", "the 21st"), part of day ("morning", "after 4pm"), a specific time, the service and the contact details, then calls the same desk. It powers the free public demo and the tests. Widget taps are handled this way in every mode, since a tap needs no language model.
 5. **Edge cases.** A full day points to the next day with openings. A time someone else took between the offer and the confirmation gets "Sorry, 2:30 PM was just booked by someone else" plus fresh times. If the booking system can't be reached, the bot says so and offers the shop's phone number.
-6. **Widget.** Open times, services and days render as buttons in a labelled group, and the booking shows as a short card with Book it and Pick another time. Choices and summaries are announced through the `aria-live` region, everything works from the keyboard, and old buttons go quiet once the visitor moves on.
+6. **Deposits.** When the booking system asks for a deposit (Kingsway takes $10 on every service), the confirmed booking comes back with a Stripe Checkout link instead of being final. The bot says the time is held for 30 minutes and the card shows a **Pay $10 deposit** button that opens Stripe's page in a new tab; paying confirms the booking and sends the usual confirmation. The link is only ever shown when it points at `https://checkout.stripe.com/`, the model is told not to write it out, and the payment itself happens entirely in the booking system (see the sequence below).
+7. **Widget.** Open times, services and days render as buttons in a labelled group, and the booking shows as a short card with Book it and Pick another time. Choices and summaries are announced through the `aria-live` region, everything works from the keyboard, and old buttons go quiet once the visitor moves on.
 
 ### Pointing it at a real booking system
 
@@ -107,7 +108,22 @@ The receptionist talks to a small `BookingProvider` interface (`app/booking/base
 - **Mock** (default): an in-memory week for three barbers with breaks, about two thirds of times already taken, chosen by a stable hash so every run shows the same openings.
 - **HTTP**: set `BOOKING_PROVIDER=http` and `BOOKING_API_URL=https://bookings.example.com`. It expects two JSON endpoints under `/api/sites/{business}`:
   - `GET /availability?service={service_id}&date=YYYY-MM-DD` returns `{"slots": [{"startAt": <epoch ms>, "staffIds": ["..."]}]}`.
-  - `POST /bookings` with `{"serviceId", "staffId", "startAt", "name", "email", "phone", "notes"}` returns `201 {"bookingId"}`, `409` when the time was taken, or `400 {"message", "fields"}` for invalid details. When several people were free at that time, the adapter tries each in turn on a `409`.
+  - `POST /bookings` with `{"serviceId", "staffId", "startAt", "name", "email", "phone", "notes"}` returns `201 {"bookingId"}`, `409` when the time was taken, or `400 {"message", "fields"}` for invalid details. When several people were free at that time, the adapter tries each in turn on a `409`. A service with a deposit returns `201 {"bookingId", "checkoutUrl", "depositCents", "holdUntil"}`: the time is held and the bot hands the visitor the payment link.
+
+```mermaid
+sequenceDiagram
+  participant V as Visitor
+  participant B as Support bot (receptionist)
+  participant S as Booking system
+  participant K as Stripe Checkout
+  V->>B: "Book it"
+  B->>S: POST /bookings
+  S-->>B: 201 bookingId, checkoutUrl, depositCents (time held 30 min)
+  B-->>V: "Held for 30 minutes" card with a Pay $10 deposit button
+  V->>K: pays in a new tab
+  K->>S: webhook: paid
+  S-->>V: booking confirmed, confirmation email (and text if opted in)
+```
 
 The service menu and staff names live in `app/booking/catalog.py`, and the bot's `BookingSetup` in `app/bots.py` names the business, its timezone and the phone number to offer when the system is down. A system with a different API needs one new adapter class; the receptionist doesn't change.
 

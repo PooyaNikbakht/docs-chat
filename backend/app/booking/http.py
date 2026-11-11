@@ -5,7 +5,8 @@ It expects two JSON endpoints under `{base_url}/api/sites/{business}`:
 - `GET  /availability?service={service_id}&date=YYYY-MM-DD`
   -> `200 {"date", "timezone", "slots": [{"startAt": <epoch ms>, "label", "staffIds": [...]}]}`
 - `POST /bookings` with `{"serviceId", "staffId", "startAt", "name", "email", "phone", "notes"}`
-  -> `201 {"bookingId", "manageToken"}`, `409` when the time is gone, `400` with
+  -> `201 {"bookingId", "manageToken"}`, plus `{"checkoutUrl", "depositCents"}` when the service
+  takes a deposit (the time is held while the visitor pays), `409` when the time is gone, `400` with
   `{"message", "fields"}` when a detail is invalid.
 
 The service list comes from the catalog in config, since visitors pick from a short, stable
@@ -91,12 +92,23 @@ class HttpBookingProvider:
                 raise BookingUnavailableError(UNREACHABLE) from exc
             if res.status_code == 201:
                 body = _json(res)
+                checkout = body.get("checkoutUrl")
+                # Only ever hand the visitor a Stripe Checkout link.
+                payment_url = (
+                    checkout
+                    if isinstance(checkout, str)
+                    and checkout.startswith("https://checkout.stripe.com/")
+                    else None
+                )
+                deposit = body.get("depositCents")
                 return Booking(
                     reference=str(body.get("bookingId", "")),
                     service=service,
                     slot=Slot(service.id, slot.start, (staff_id,)),
                     staff=self.catalog.staff_member(staff_id),
                     customer=customer,
+                    payment_url=payment_url,
+                    deposit_cents=int(deposit) if payment_url and isinstance(deposit, int) else 0,
                 )
             if res.status_code == 409:
                 last = SlotTakenError("That time was just booked by someone else.")

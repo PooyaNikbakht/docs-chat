@@ -323,7 +323,7 @@ class BookingDesk:
         self.state.offered.pop(pending.slot_id, None)
         self.state.booked.append(booking.reference)
         event = BookingEvent(
-            status="confirmed",
+            status="awaiting_payment" if booking.payment_url else "confirmed",
             service=booking.service.name,
             when=self._full_when(booking.slot),
             staff=booking.staff.name if booking.staff else None,
@@ -331,6 +331,8 @@ class BookingDesk:
             contact=booking.customer.email,
             price=booking.service.price,
             reference=booking.reference,
+            payment_url=booking.payment_url,
+            deposit=booking.deposit if booking.payment_url else None,
         )
         return booking, event
 

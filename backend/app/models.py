@@ -191,10 +191,11 @@ class ChoicesEvent(BaseModel):
 
 
 class BookingEvent(BaseModel):
-    """A booking summary: `pending` asks the visitor to confirm, `confirmed` is written."""
+    """A booking summary: `pending` asks the visitor to confirm, `confirmed` is written,
+    `awaiting_payment` is held while the visitor pays the deposit at `payment_url`."""
 
     type: Literal["booking"] = "booking"
-    status: Literal["pending", "confirmed"]
+    status: Literal["pending", "confirmed", "awaiting_payment"]
     service: str
     when: str
     staff: str | None = None
@@ -202,6 +203,8 @@ class BookingEvent(BaseModel):
     contact: str
     price: str | None = None
     reference: str | None = None
+    payment_url: str | None = None
+    deposit: str | None = None
 
 
 class ErrorEvent(BaseModel):

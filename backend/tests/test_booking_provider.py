@@ -220,3 +220,23 @@ async def test_http_book_invalid_details_and_server_errors():
     provider, _ = http_provider(lambda r: httpx.Response(201))
     with pytest.raises(BookingError):
         await provider.book(saturday_slot(), ALEX)  # no staff to book with
+
+
+async def test_http_book_with_a_deposit_returns_the_checkout_link():
+    body = {
+        "bookingId": "bk_3",
+        "manageToken": "t",
+        "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_test_1",
+        "depositCents": 1000,
+    }
+    provider, _ = http_provider(lambda r: httpx.Response(201, json=body))
+    booking = await provider.book(saturday_slot("kingsway_stf_dani"), ALEX)
+    assert booking.payment_url == "https://checkout.stripe.com/c/pay/cs_test_1"
+    assert booking.deposit_cents == 1000 and booking.deposit == "$10"
+
+
+async def test_http_book_ignores_a_payment_link_that_isnt_stripe_checkout():
+    body = {"bookingId": "bk_4", "checkoutUrl": "https://evil.example/pay", "depositCents": 1000}
+    provider, _ = http_provider(lambda r: httpx.Response(201, json=body))
+    booking = await provider.book(saturday_slot("kingsway_stf_dani"), ALEX)
+    assert booking.payment_url is None and booking.deposit_cents == 0

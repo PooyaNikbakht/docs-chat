@@ -329,6 +329,13 @@ class OfflineReceptionist:
             return [TextEvent(text=f"I couldn't book that: {exc.message}"), desk.pending_event()]
         first = booking.customer.name.split()[0]
         staff = f" with {booking.staff.name}" if booking.staff else ""
+        if booking.payment_url:
+            text = (
+                f"Almost done, {first}: {booking.service.name.lower()}{staff} "
+                f"{desk.describe(booking.slot)} is held for you for 30 minutes. "
+                f"Pay the {booking.deposit} deposit with the button below to confirm it."
+            )
+            return [TextEvent(text=text), event]
         text = (
             f"You're booked, {first}: {booking.service.name.lower()}{staff} "
             f"{desk.describe(booking.slot)}. Your reference is {booking.reference}. See you then!"

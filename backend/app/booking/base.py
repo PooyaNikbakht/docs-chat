@@ -61,6 +61,14 @@ class Booking:
     slot: Slot
     staff: Staff | None
     customer: Customer
+    # A deposit is due: the time is held while the visitor pays at this Stripe Checkout link.
+    payment_url: str | None = None
+    deposit_cents: int = 0
+
+    @property
+    def deposit(self) -> str:
+        dollars, cents = divmod(self.deposit_cents, 100)
+        return f"${dollars}" if cents == 0 else f"${dollars}.{cents:02d}"
 
 
 @dataclass(frozen=True)

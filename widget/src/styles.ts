@@ -293,7 +293,7 @@ export const css = `
   border-radius: 12px;
   background: var(--bg);
 }
-.booking.confirmed { border-color: var(--accent); }
+.booking.confirmed, .booking.awaiting_payment { border-color: var(--accent); }
 .booking-head {
   display: flex;
   align-items: center;
@@ -319,6 +319,8 @@ export const css = `
 .confirm { background: var(--accent) !important; color: var(--on-accent) !important; border: 1px solid var(--accent) !important; }
 .change { background: var(--bg) !important; color: var(--ink) !important; border: 1px solid var(--border) !important; }
 .change:hover { border-color: var(--accent) !important; }
+.dc a.confirm { display: inline-flex; align-items: center; text-decoration: none; }
+.booking-note { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
 
 /* Handoff and retry */
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
